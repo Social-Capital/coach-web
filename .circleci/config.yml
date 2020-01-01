@@ -29,7 +29,7 @@ jobs:
           at: /tmp/dist
       - run:
           name: Install Tencent Cloud CLI tool
-          command: pip install coscmd
+          command: pip install coscmd tccli
       - run:
           name: Pop config for Tencent Cloud COS
           command: coscmd config -a $TC_SECRET_ID -s $TC_SECRET_KEY -b $TC_BUCKET -r $TC_REGION
@@ -39,6 +39,12 @@ jobs:
       - run:
           name: Upload to COS
           command: coscmd upload -r /tmp/dist/dist/ /coach/
+      - run:
+          name: Config TCtool
+          command: tccli configure set secretId $TC_SECRET_ID region $TC_REGION secretKey $TC_SECRET_KEY
+      - run:
+          name: Refresh CDN
+          command: tccli cdn RefreshCdnDir dirs.1 https://promo.tigercoach.cn/coach/
 workflows:
   version: 2
   build-and-deploy:
