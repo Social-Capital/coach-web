@@ -1,0 +1,46 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: node:8
+    steps:
+      - checkout
+      - run:
+          name: NPM dependencies
+          command: npm install
+      - run:
+          name: Build
+          command: npm run build
+      - store_artifacts:
+          path: ./dist
+          destination: /tmp/dist
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist
+  deploy:
+    docker:
+      - image: python
+    steps:
+      - attach_workspace:
+          at: /tmp/dist
+      - run:
+          name: Install Tencent Cloud CLI tool
+          command: pip install coscmd
+      - run:
+          name: Pop config for Tencent Cloud COS
+          command: coscmd config -a $TC_SECRET_ID -s $TC_SECRET_KEY -b $TC_BUCKET -r $TC_REGION
+      - run:
+          name: Clear the COS bucket before uploading
+          command: coscmd delete -rf /coach/
+      - run:
+          name: Upload to COS
+          command: coscmd upload -r /tmp/dist/dist/ /coach/
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
