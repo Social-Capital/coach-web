@@ -9,6 +9,9 @@ jobs:
           name: NPM dependencies
           command: npm install
       - run:
+          name: less loader
+          command: npm install less-loader
+      - run:
           name: Build
           command: npm run build
       - store_artifacts:
