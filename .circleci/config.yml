@@ -10,7 +10,7 @@ jobs:
           command: npm install
       - run:
           name: less loader
-          command: npm install less-loader
+          command: npm install less less-loader
       - run:
           name: Build
           command: npm run build
