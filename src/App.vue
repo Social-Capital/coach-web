@@ -114,6 +114,7 @@
 
 <script>
 import utils from "./servers/utils.js";
+import logo from "./assets/LOGO2@2x.png";
 
 export default {
   name: "app",
@@ -202,9 +203,9 @@ export default {
       });
       wx.ready(function() {
         wx.onMenuShareTimeline({
-          title: "", // 分享标题
-          link: "", // 分享链接
-          imgUrl: "", // 分享图标
+          title: this.coachInfo.name+"", // 分享标题
+          link: "https://promo.tigercoach.cn/coach/index.html?state="+this.cid, // 分享链接
+          imgUrl: this.coachInfo.Appearances[0].appearance||logo, // 分享图标
           success: function() {
             // 用户确认分享后执行的回调函数
           },
@@ -213,10 +214,9 @@ export default {
           }
         });
         wx.onMenuShareAppMessage({
-          title: "", // 分享标题
-          desc: "", // 分享描述
-          link: "", // 分享链接
-          imgUrl: "", // 分享图标
+          title: this.coachInfo.name+" 在老虎教练等你", // 分享标题
+          link: "https://promo.tigercoach.cn/coach/index.html?state="+this.cid, // 分享链接
+          imgUrl: this.coachInfo.Appearances[0].appearance||logo, // 分享图标
           type: "", // 分享类型,music、video或link，不填默认为link
           dataUrl: "", // 如果type是music或video，则要提供数据链接，默认为空
           success: function() {
