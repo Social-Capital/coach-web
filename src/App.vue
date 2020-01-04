@@ -4,7 +4,8 @@
       <mt-swipe :auto="3000" class="swiper ta_c">
         <mt-swipe-item class="swiper" v-for="(item,index ) of coachInfo.Appearances" :key="index">
           <div class="img_con swiper_con">
-            <img :src="item.appearance" alt />
+            <img :src="item.appearance" class="bg" alt />
+            <img :src="item.appearance" class="main" alt />
           </div>
         </mt-swipe-item>
       </mt-swipe>
@@ -25,7 +26,7 @@
             :style="{'-webkit-line-clamp': isShowIntro?'unset':2,}"
           >{{coachInfo.introduce}}</div>
           <div class="ta_c mt_10" @click="isShowIntro=!isShowIntro">
-            <img class="down" :class="{show:isShowIntro}"  src="@/assets/down.png" alt="">
+            <img class="down" :class="{show:isShowIntro}" src="@/assets/down.png" alt />
           </div>
         </div>
         <div class="certs mt_15">
@@ -54,14 +55,14 @@
       </div>
     </div>
     <div class="expire ta_c" v-show="isExpire">
-      <img class="mt_100" src="@/assets/success/expire.png" alt="">
+      <img class="mt_100" src="@/assets/success/expire.png" alt />
       <p class="mt_30">很抱歉，未能找到该教练的资料</p>
       <div class="bottom">
-        <img class="code" src="@/assets/wechat.jpeg" alt="">
+        <img class="code" src="@/assets/wechat.jpeg" alt />
         <p class="mt_15">关注⽼⻁运动公众号，更新教练信息</p>
-      </div>  
+      </div>
     </div>
-    
+
     <!-- <sign msg="Welcome to Your Vue.js App"/> -->
 
     <div class="sign_con" v-show="showSign">
@@ -71,39 +72,40 @@
       <div class="sign" v-if="!showSuccess">
         <div class="form ta_c pd_15">
           <div class="tit1 fs_16">
-            <img class="vt_m pr_15"  src="@/assets/sign/LOGO1@2x.png" />老虎教练
+            <img class="vt_m pr_15" src="@/assets/sign/LOGO1@2x.png" />老虎教练
           </div>
           <div class="input_con">
-            <img src="@/assets/sign/icon1@2x.png" alt="">
+            <img src="@/assets/sign/icon1@2x.png" alt />
 
-            <input type="number"  placeholder="请输入手机号"  v-model.trim="phone" />
+            <input type="number" placeholder="请输入手机号" v-model.trim="phone" />
           </div>
           <div class="input_con">
-            <img src="@/assets/sign/icon2@2x.png" alt="">
+            <img src="@/assets/sign/icon2@2x.png" alt />
             <input type="number" placeholder="请输入验证码" v-model.trim="vcode" />
-            <mt-button size="normal" @click="getCode" :class="{counting:count<60}" class=" acode fl_r name_btn" type="primary">
-                {{count==60?"验证码":count+"s"}}
-            </mt-button>
+            <mt-button
+              size="normal"
+              @click="getCode"
+              :class="{counting:count<60}"
+              class="acode fl_r name_btn"
+              type="primary"
+            >{{count==60?"验证码":count+"s"}}</mt-button>
           </div>
-          <mt-button size="large" class="mt_40" @click="checkCode" type="primary">
-            提交
-          </mt-button>
+          <mt-button size="large" class="mt_40" @click="checkCode" type="primary">提交</mt-button>
         </div>
         <div class="sign_info pd_15">
           <span>
             <img src="@/assets/sign/lock@2x.png" alt />
           </span>
-
           服务由健身教练和其他服务商提供。提交您的个人资料，即 代表您同意授权⽼⻁运动使⽤您提交的个⼈资料和联系信息 并将为您提供服务所必须的联系资料分享给第三⽅。⽼⻁运 动和第三⽅会对的个⼈资料进⾏严格的保护。
         </div>
       </div>
       <div class="success ta_c pd_15" v-show="showSuccess">
-        <img class="mt_30" src="@/assets/success/icon1@2x.png" alt="">
+        <img class="mt_30" src="@/assets/success/icon1@2x.png" alt />
         <p class="mt_10">提交成功</p>
-        <p class="mt_40 lh_12">⽼⻁教练 已通知 </p>
+        <p class="mt_40 lh_12">⽼⻁教练 已通知</p>
         <p class="lh_12">{{coachInfo.name}}</p>
         <p class="lh_12">在24⼩时内通过预留的⼿机号码与您联系</p>
-        <img class="code mt_15" src="@/assets/wechat.jpeg" alt="">
+        <img class="code mt_15" src="@/assets/wechat.jpeg" alt />
         <p class="mt_15 fs_10">如需更多服务，请关注⽼⻁运动公众号</p>
       </div>
     </div>
@@ -121,7 +123,7 @@ export default {
   data() {
     return {
       cid: "",
-      code:"",
+      code: "",
       isShowIntro: false,
       coachInfo: {
         Appearances: []
@@ -130,27 +132,28 @@ export default {
       isSigned: false,
       loading: false,
       showSign: false,
-      showSuccess:false,
-      phone:"",
-      vcode:"",
-      base64code:"",
+      showSuccess: false,
+      phone: "",
+      vcode: "",
+      base64code: "",
 
-      count:60,
-      msg_id:"",
-      checkedPhone:"",
+      count: 60,
+      msg_id: "",
+      checkedPhone: ""
     };
   },
   created() {
     var cid = utils.getQueryString("state");
     var code = utils.getQueryString("code");
-    this.code=code;
-    if(!this.code){
-       this.$toast({
-        message: '未能获取你的用户信息，请重新打开尝试。',
+    this.code = code;
+    if (!this.code) {
+      this.$toast({
+        message: "未能获取你的用户信息，请重新打开尝试。",
         duration: 5000
       });
     }
-    this.base64code =btoa('0d3f69db66c7f0140c46a6d4:def15da9fc5c53c5119627e4');
+    this.initConfig();
+    this.base64code = btoa("0d3f69db66c7f0140c46a6d4:def15da9fc5c53c5119627e4");
     if (!cid) {
       this.isExpire = true;
     } else {
@@ -159,14 +162,105 @@ export default {
     }
   },
   methods: {
-    
-    booking(){
-    
-      var _this=this;
-      if (this.loading ) {
+    initConfig() {
+      var _this = this;
+      
+      this.$api.post(
+        "https://api.tigercoach.cn/v3.5/port/wx/js/signature",
+        {
+          // url: window.location.href
+          url: "https://promo.tigercoach.cn/coach/index.html?state=1NEbUPXJQFONmj7L3rOQSOvNuTr"
+        },
+        response => {
+          if (response.status >= 200 && response.status < 300) {
+            let res = response.data;
+            if (res.Code == 200 && res.Data) {
+              _this.initWx(res.Data);
+            } 
+          } 
+        },
+        {
+          token:"admin_123"
+        }
+      );
+    },
+    initWx(data) {
+      console.log(data);
+      wx.config({
+        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: data.appId, // 必填，公众号的唯一标识
+        timestamp: data.timestamp, // 必填，生成签名的时间戳
+        nonceStr: data.nonceStr, // 必填，生成签名的随机串
+        signature: data.signature, // 必填，签名
+        jsApiList: [
+          "onMenuShareTimeline",
+          "onMenuShareAppMessage",
+          "onMenuShareQQ",
+          "onMenuShareWeibo",
+          "onMenuShareQZone"
+        ] // 必填，需要使用的JS接口列表 这里填写需要用到的微信api openlocation为使用微信内置地图查看位置接口
+      });
+      wx.ready(function() {
+        wx.onMenuShareTimeline({
+          title: "", // 分享标题
+          link: "", // 分享链接
+          imgUrl: "", // 分享图标
+          success: function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel: function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+        wx.onMenuShareAppMessage({
+          title: "", // 分享标题
+          desc: "", // 分享描述
+          link: "", // 分享链接
+          imgUrl: "", // 分享图标
+          type: "", // 分享类型,music、video或link，不填默认为link
+          dataUrl: "", // 如果type是music或video，则要提供数据链接，默认为空
+          success: function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel: function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+        wx.onMenuShareQQ({
+          title: "", // 分享标题
+          desc: "", // 分享描述
+          link: "", // 分享链接
+          imgUrl: "", // 分享图标
+          success: function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel: function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+        wx.onMenuShareQZone({
+          title: "", // 分享标题
+          desc: "", // 分享描述
+          link: "", // 分享链接
+          imgUrl: "", // 分享图标
+          success: function() {
+            // 用户确认分享后执行的回调函数
+          },
+          cancel: function() {
+            // 用户取消分享后执行的回调函数
+          }
+        });
+      });
+      wx.error(function(res) {
+        console.log(res);
+      });
+    },
+    booking() {
+      var _this = this;
+      if (this.loading) {
         return;
       }
-     
+
       this.$indicator.open({
         text: "发送中...",
         spinnerType: "fading-circle"
@@ -175,23 +269,23 @@ export default {
       this.$api.post(
         "https://api.tigercoach.cn/open/reference/coach/customer",
         {
-          "coach_id":this.cid,
-          "customer_tel":this.phone,
-          "customer_code":this.code
+          coach_id: this.cid,
+          customer_tel: this.phone,
+          customer_code: this.code
         },
         response => {
           this.loading = false;
           this.$indicator.close();
           if (response.status >= 200 && response.status < 300) {
             console.log(response.data);
-            let res=response.data;
+            let res = response.data;
             // this.showSuccess=true;
             if (res.Code == 200 && res.Data) {
               // console.log(res.Data);
               // this.coachInfo = res.Data;
               // res.code;
               this.$toast(res.Msg);
-              this.showSuccess=true;
+              this.showSuccess = true;
             } else {
               // this.isExpire = true;
               this.$toast(res.Msg);
@@ -202,17 +296,15 @@ export default {
             this.$toast("网络不佳请稍后再试");
             this.loading = false;
           }
-        },
-        
+        }
       );
     },
-    checkCode(){
-    
-      var _this=this;
-      if (this.loading ) {
+    checkCode() {
+      var _this = this;
+      if (this.loading) {
         return;
       }
-      if(this.phone!=this.checkedPhone){
+      if (this.phone != this.checkedPhone) {
         this.$toast("手机号已更改,请重新获取验证码");
         return;
       }
@@ -221,27 +313,27 @@ export default {
         text: "验证中...",
         spinnerType: "fading-circle"
       });
-      
+
       this.$api.post(
         "https://api.tigercoach.cn/open/tel/verify",
         {
-          "msg_id": this.msg_id,
-          "code":this.vcode,
+          msg_id: this.msg_id,
+          code: this.vcode
         },
         response => {
           this.loading = false;
           this.$indicator.close();
           if (response.status >= 200 && response.status < 300) {
             console.log(response.data);
-            let res=response.data;
+            let res = response.data;
             if (res.Code == 200 && res.Data) {
               // console.log(res.Data);
               // this.coachInfo = res.Data;
               // res.code
-              
+
               if (res.Data.is_valid) {
                 this.booking();
-              }else{
+              } else {
                 this.$toast(res.Msg);
               }
             } else {
@@ -254,13 +346,12 @@ export default {
             this.$toast("网络不佳请稍后再试");
             this.loading = false;
           }
-        },
-        
+        }
       );
     },
-    getCode(){
-      var _this=this;
-      if (this.loading &&this.count<60) {
+    getCode() {
+      var _this = this;
+      if (this.loading && this.count < 60) {
         return;
       }
       console.log("嘚瑟是的是的士大夫第三方");
@@ -272,25 +363,25 @@ export default {
       this.$api.post(
         "https://api.tigercoach.cn/open/tel/send",
         {
-          "tel": this.phone,
+          tel: this.phone
         },
         response => {
           this.loading = false;
           this.$indicator.close();
           if (response.status >= 200 && response.status < 300) {
             console.log(response.data);
-            let res =response.data;
+            let res = response.data;
             if (res.Code == 200 && res.Data) {
               // console.log(res.Data);
               // this.coachInfo = res.Data;
               // res.code
               this.$toast("发送成功");
-              this.msg_id=res.Data.msg_id;
-              this.checkedPhone=this.phone;
-              let interval= setInterval(() => {
-                this.count--
-                if(this.count<=0){
-                  this.count=60;
+              this.msg_id = res.Data.msg_id;
+              this.checkedPhone = this.phone;
+              let interval = setInterval(() => {
+                this.count--;
+                if (this.count <= 0) {
+                  this.count = 60;
                   clearInterval(interval);
                 }
               }, 1000);
@@ -304,8 +395,7 @@ export default {
             this.$toast("网络不佳请稍后再试");
             this.loading = false;
           }
-        },
-        
+        }
       );
     },
     getData() {
@@ -341,7 +431,6 @@ export default {
             console.log(response.message);
             this.loading = false;
             this.$toast("网络不佳请稍后再试");
-            
           }
         }
       );
@@ -358,23 +447,22 @@ export default {
 
   color: #ddd;
 }
-.expire{
+.expire {
   height: 100vh;
   width: 100vw;
   box-sizing: border-box;
   position: relative;
-  .mt_100{
-    margin-top:100px;
-
+  .mt_100 {
+    margin-top: 100px;
   }
-  img{
-    width:100px;
+  img {
+    width: 100px;
   }
 
-  .bottom{
+  .bottom {
     width: 100vw;
-    .code{
-      width:130px;
+    .code {
+      width: 130px;
     }
     position: absolute;
     left: 0;
@@ -389,92 +477,91 @@ export default {
   background: rgba(58, 58, 58, 1);
   border-radius: 5px;
   min-height: 50vw;
-  input{
-    color:#ddd;
+  input {
+    color: #ddd;
   }
   .sign {
     .form {
-      .tit1{
-        margin-top:30px;
+      .tit1 {
+        margin-top: 30px;
         line-height: 25px;
         margin-bottom: 40px;
-        img{
-          height:20px;
+        img {
+          height: 20px;
           width: 20px;
           margin-top: -2px;
         }
       }
-      .input_con{
-        margin-top:10px;
+      .input_con {
+        margin-top: 10px;
         position: relative;
         line-height: 40px;
-        .acode{
+        .acode {
           position: absolute;
           right: 10px;
-          top:7px;
+          top: 7px;
           height: 26px;
-          background:rgba(255,34,71,0)!important;
-          border:1px solid rgba(255, 34, 71, 0.58);
-          border-radius:16px;
-          color:rgba(255, 34, 71, 0.58);
-          padding-left:20px; 
-          padding-right:20px; 
-          &.counting{
-            color:#ddd;
-            border-color:#ddd;
+          background: rgba(255, 34, 71, 0) !important;
+          border: 1px solid rgba(255, 34, 71, 0.58);
+          border-radius: 16px;
+          color: rgba(255, 34, 71, 0.58);
+          padding-left: 20px;
+          padding-right: 20px;
+          &.counting {
+            color: #ddd;
+            border-color: #ddd;
           }
         }
-        img{
+        img {
           height: 18px;
           position: absolute;
-          top:11px;
-          left:10px;
+          top: 11px;
+          left: 10px;
           display: inline-block;
           padding-right: 10px;
-          border-right:1px solid #ddd;
-
+          border-right: 1px solid #ddd;
         }
-        input{
+        input {
           width: 100%;
-          line-height: 40px; 
-          background:#303030;
+          line-height: 40px;
+          background: #303030;
           padding: 0 40px;
           box-sizing: border-box;
-          border-radius:5px;
-          border:none;
+          border-radius: 5px;
+          border: none;
         }
       }
     }
-    .sign_info{
+    .sign_info {
       position: relative;
       padding: 15px 15px;
-      margin-top:40px;
-      border-top:1px dashed #ddd;
-      span{
-        width:60px;
+      margin-top: 40px;
+      border-top: 1px dashed #ddd;
+      span {
+        width: 60px;
         display: line-block;
         position: absolute;
-        top:-8px;
-        left:50%;
-        color:#585858;
+        top: -8px;
+        left: 50%;
+        color: #585858;
         transform: translateX(-50%);
         background: rgba(58, 58, 58, 1);
         text-align: center;
-        img{
+        img {
           height: 12px;
         }
       }
     }
   }
-  .success{
-    .lh_12{
+  .success {
+    .lh_12 {
       line-height: 1.2;
     }
-    .code{
-      width:130px;
+    .code {
+      width: 130px;
     }
-    img{
-      width:73px;
+    img {
+      width: 73px;
     }
   }
   .close {
@@ -516,11 +603,11 @@ export default {
     // -webkit-line-clamp: 3;
     overflow: hidden;
   }
-  .down{
-    transition: all .8s ;
-    
+  .down {
+    transition: all 0.8s;
+
     width: 16px;
-    &.show{
+    &.show {
       transform: rotate(-180deg);
     }
   }
@@ -576,11 +663,11 @@ export default {
 }
 .swiper {
   width: 100vw;
-  height: 75vw;
+  height: 133.33vw;
 }
 .swiper_con {
   width: 100vw;
-  height: 75vw;
+  height: 133.33vw;
 }
 .sign_con {
   position: fixed;
