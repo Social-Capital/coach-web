@@ -187,6 +187,7 @@ export default {
     },
     initWx(data) {
       console.log(data);
+      var _this=this;
       wx.config({
         debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
         appId: data.appId, // 必填，公众号的唯一标识
@@ -203,9 +204,9 @@ export default {
       });
       wx.ready(function() {
         wx.onMenuShareTimeline({
-          title: this.coachInfo.name+"", // 分享标题
-          link: "https://promo.tigercoach.cn/coach/index.html?state="+this.cid, // 分享链接
-          imgUrl: this.coachInfo.Appearances[0].appearance||logo, // 分享图标
+          title: _this.coachInfo.name+" 在老虎教练等你", // 分享标题
+          link: "https://promo.tigercoach.cn/coach/index.html?state="+_this.cid, // 分享链接
+          imgUrl: _this.coachInfo.Appearances[0].appearance||logo, // 分享图标
           success: function() {
             // 用户确认分享后执行的回调函数
           },
@@ -214,9 +215,9 @@ export default {
           }
         });
         wx.onMenuShareAppMessage({
-          title: this.coachInfo.name+" 在老虎教练等你", // 分享标题
-          link: "https://promo.tigercoach.cn/coach/index.html?state="+this.cid, // 分享链接
-          imgUrl: this.coachInfo.Appearances[0].appearance||logo, // 分享图标
+          title: _this.coachInfo.name+" 在老虎教练等你", // 分享标题
+          link: "https://promo.tigercoach.cn/coach/index.html?state="+_this.cid, // 分享链接
+          imgUrl: _this.coachInfo.Appearances[0].appearance||logo, // 分享图标
           type: "", // 分享类型,music、video或link，不填默认为link
           dataUrl: "", // 如果type是music或video，则要提供数据链接，默认为空
           success: function() {
