@@ -218,7 +218,7 @@ export default {
         wx.onMenuShareAppMessage({
           title: _this.coachInfo.name+" 在老虎教练等你", // 分享标题
           desc: "", // 分享描述
-          link: "https://promo.tigercoach.cn/coach/index.html?state="+_thisg.cid, // 分享链接
+          link: "https://promo.tigercoach.cn/coach/index.html?state="+_this.cid, // 分享链接
           imgUrl: _this.coachInfo.Appearances[0].appearance||logo, // 分享图标
           type: "", // 分享类型,music、video或link，不填默认为link
           dataUrl: "", // 如果type是music或video，则要提供数据链接，默认为空
