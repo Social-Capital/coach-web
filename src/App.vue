@@ -49,7 +49,7 @@
       </div>
       <div class="page_bottom ta_c">
         <div class="fs_12 tit1">
-          <img class="vt_m pr_15" src="@/assets/LOGO2@2x.png" />老虎教练
+          <img class="vt_m pr_15" src="@/assets/LOGO1@2x.png" />老虎教练
         </div>
         <div class="mt_10 tit2">使用中国最大的健身教练app老虎教练生成</div>
       </div>
@@ -114,7 +114,7 @@
 
 <script>
 import utils from "./servers/utils.js";
-import logo from "./assets/LOGO2@2x.png";
+import logo from "./assets/LOGO1@2x.png";
 
 export default {
   name: "app",
@@ -215,9 +215,9 @@ export default {
           }
         });
         wx.onMenuShareAppMessage({
-          title: _this.coachInfo.name+" 在老虎教练等你", // 分享标题
-          link: "https://promo.tigercoach.cn/coach/index.html?state="+_this.cid, // 分享链接
-          imgUrl: _this.coachInfo.Appearances[0].appearance||logo, // 分享图标
+          title: _thisg.coachInfo.name+" 在老虎教练等你", // 分享标题
+          link: "https://promo.tigercoach.cn/coach/index.html?state="+_thisg.cid, // 分享链接
+          imgUrl: _thisg.coachInfo.Appearances[0].appearance||logo, // 分享图标
           type: "", // 分享类型,music、video或link，不填默认为link
           dataUrl: "", // 如果type是music或video，则要提供数据链接，默认为空
           success: function() {
