@@ -303,6 +303,7 @@ export default {
               this.showSuccess = true;
             } else if(res.Code == 500 ){
               this.$toast("登陆已过期请重试!");
+              this.code="";
               this.showSign=false; 
             }else {
               // this.isExpire = true;
