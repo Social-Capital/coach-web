@@ -12,7 +12,7 @@
       <div class="info_con pd_15">
         <div class="name_con ta_l">
           <span class="name float_l fw_b fs_16">{{coachInfo.name}}</span>
-          <mt-button size="small" class="fl_r name_btn" type="primary" @click="showSign=true">
+          <mt-button size="small" class="fl_r name_btn" type="primary" @click="checkLogin">
             <img src="@/assets/icon4@2x.png" />免费咨询
           </mt-button>
         </div>
@@ -125,9 +125,13 @@ export default {
     return {
       cid: "",
       code: "",
+      
       isShowIntro: false,
       coachInfo: {
         Appearances: []
+      },
+      config:{
+        appId:""
       },
       isExpire: false,
       isSigned: false,
@@ -163,6 +167,16 @@ export default {
     }
   },
   methods: {
+    checkLogin(){
+      if(this.code){
+        this.showSign=true;
+      }else{
+        let rdr= encodeURIComponent("https://promo.tigercoach.cn/coach/index.html") ;
+        
+        let url="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+this.config.appId+"&redirect_uri="+rdr+"&response_type=code&scope=snsapi_base&state="+this.cid+"&connect_redirect=1#wechat_redirect"
+        window.location.href=url;
+      }
+    },
     initConfig() {
       var _this = this;
       
@@ -176,6 +190,7 @@ export default {
           if (response.status >= 200 && response.status < 300) {
             let res = response.data;
             if (res.Code == 200 && res.Data) {
+              this.config=res.Data;
               _this.initWx(res.Data);
             } 
           } 
@@ -280,13 +295,16 @@ export default {
             console.log(response.data);
             let res = response.data;
             // this.showSuccess=true;
-            if (res.Code == 200 && res.Data) {
+            if (res.Code == 200 ) {
               // console.log(res.Data);
               // this.coachInfo = res.Data;
               // res.code;
-              this.$toast(res.Msg);
+              // this.$toast();
               this.showSuccess = true;
-            } else {
+            } else if(res.Code == 500 ){
+              this.$toast("登陆已过期请重试!");
+              this.showSign=false; 
+            }else {
               // this.isExpire = true;
               this.$toast(res.Msg);
             }
@@ -334,7 +352,7 @@ export default {
               if (res.Data.is_valid) {
                 this.booking();
               } else {
-                this.$toast(res.Msg);
+                this.$toast("验证码错误!");
               }
             } else {
               // this.isExpire = true;
@@ -351,7 +369,7 @@ export default {
     },
     getCode() {
       var _this = this;
-      if (this.loading && this.count < 60) {
+      if (this.loading || this.count < 60) {
         return;
       }
       console.log("嘚瑟是的是的士大夫第三方");
