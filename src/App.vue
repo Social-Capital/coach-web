@@ -17,15 +17,16 @@
           </mt-button>
         </div>
         <div class="intro pd_15 mt_15">
-          <div class="location pb_15 ta_r">
+          <div class="location " :class="{pb_15:coachInfo.introduce}">
             <img class="pr_15 vt_m" src="@/assets/location@2x.png" />
             {{coachInfo.city}}
           </div>
           <div
+            v-if="coachInfo.introduce"
             class="intro_detail"
             :style="{'-webkit-line-clamp': isShowIntro?'unset':2,}"
-          >{{coachInfo.introduce}}</div>
-          <div class="ta_c mt_10" @click="isShowIntro=!isShowIntro">
+          >{{coachInfo.introduce||"暂无简介"}}</div>
+          <div class="ta_c mt_10" v-if="coachInfo.introduce" @click="isShowIntro=!isShowIntro">
             <img class="down" :class="{show:isShowIntro}" src="@/assets/down.png" alt />
           </div>
         </div>
@@ -43,7 +44,7 @@
           >
             <img class="before" src="@/assets/icon1@2x.png" alt />
             {{item.certname}}
-            <img class="after" src="@/assets/location@2x.png" alt />
+            <img class="after" src="@/assets/icon2@2x.png" alt />
           </div>
         </div>
       </div>
