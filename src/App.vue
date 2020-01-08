@@ -30,11 +30,11 @@
             <img class="down" :class="{show:isShowIntro}" src="@/assets/down.png" alt />
           </div>
         </div>
-        <div class="certs mt_15">
+        <div class="certs mt_15" v-if="coachInfo.Certs&&coachInfo.Certs.length>0">
           <div class="cert_title">
             <span class="cert_title_sub fs_16 fw_b">证书</span>
-            <div class="cert_title_main ta_c fs12 vt_m">
-              <img class="vt_m pr_10" src="@/assets/icon2@2x.png" />职业资格证书已经过老虎运动的真实性核查
+            <div class="cert_title_main ta_c fs12 vt_m" >
+              <img class="vt_m pr_10" src="@/assets/icon2@2x.png" v-show="coachInfo.plus==1" /><span v-show="coachInfo.plus==1" >职业资格证书已经过老虎运动的真实性核查</span> 
             </div>
           </div>
           <div
@@ -152,12 +152,12 @@ export default {
     var cid = utils.getQueryString("state");
     var code = utils.getQueryString("code");
     this.code = code;
-    if (!this.code) {
-      this.$toast({
-        message: "未能获取你的用户信息，请重新打开尝试。",
-        duration: 5000
-      });
-    }
+    // if (!this.code) {
+    //   this.$toast({
+    //     message: "未能获取你的用户信息，请重新打开尝试。",
+    //     duration: 5000
+    //   });
+    // }
     this.initConfig();
     this.base64code = btoa("0d3f69db66c7f0140c46a6d4:def15da9fc5c53c5119627e4");
     if (!cid) {
@@ -439,7 +439,15 @@ export default {
             console.log(response.data);
             let res = response.data;
             if (res.Code == 200 && res.Data) {
-              console.log(res.Data);
+              // console.log(res.Data);
+              // res.Data.Appearances=[];
+              // res.Data.plus=0;
+              // res.Data.Certs="";
+              if(!res.Data.Appearances||res.Data.Appearances.length==0){
+                res.Data.Appearances=[{
+                  appearance:"https://promo.tigercoach.cn/img/no_photo.png"
+                }]
+              }
               // res.Data.introduce="sadf asdf s沙发士大夫撒旦法爱的色放送达UK和福克斯大富豪 第三方哈萨克京东方啥的看法双卡双待后方可健身房康师傅会计师打发会计师打发和卡萨丁发看见谁看见谁可是会计师费会计师费看见谁看见 ";
               this.coachInfo = res.Data;
             } else {
@@ -637,6 +645,7 @@ export default {
   .cert_title {
     line-height: 20px;
     position: relative;
+    height: 20px;
     .cert_title_sub {
       position: absolute;
       left: 0;
