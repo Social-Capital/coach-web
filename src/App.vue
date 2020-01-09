@@ -25,8 +25,12 @@
             v-if="coachInfo.introduce"
             class="intro_detail"
             :style="{'-webkit-line-clamp': isShowIntro?'unset':2,}"
-          >{{coachInfo.introduce||"暂无简介"}}</div>
-          <div class="ta_c mt_10" v-if="coachInfo.introduce" @click="isShowIntro=!isShowIntro">
+            v-html="coachInfo.introduce||'暂无简介'"
+          ></div>
+          <div class="text" id="text">
+            {{coachInfo.introduce}}
+          </div>
+          <div class="ta_c mt_10 introduce" v-if="coachInfo.introduce&&longEnough" @click="isShowIntro=!isShowIntro">
             <img class="down" :class="{show:isShowIntro}" src="@/assets/down.png" alt />
           </div>
         </div>
@@ -126,9 +130,11 @@ export default {
     return {
       cid: "",
       code: "",
-      
+      longEnough:false, 
       isShowIntro: false,
       coachInfo: {
+        // name:"洒的飞洒是但是但是是的但是但是是的是的但是   ",
+        // introduce:"士大夫是的第达是的发的夫的飞洒是的伤大发而化工二狗儿沙发s二等分士大夫士大夫萨芬的士大夫 士大夫士大夫",
         Appearances: []
       },
       config:{
@@ -147,6 +153,16 @@ export default {
       msg_id: "",
       checkedPhone: ""
     };
+  },
+  mounted(){
+    this.$nextTick(()=>{
+      console.log(document.getElementById("text").offsetHeight);
+      let height=document.getElementById("text").offsetHeight;
+      if((height-30)>32){
+        this.longEnough=true;
+      }
+    })
+    
   },
   created() {
     var cid = utils.getQueryString("state");
@@ -183,7 +199,6 @@ export default {
     },
     initConfig() {
       var _this = this;
-      
       this.$api.post(
         "https://api.tigercoach.cn/v3.5/port/wx/js/signature",
         {
@@ -607,12 +622,15 @@ export default {
   }
 }
 .name_con {
+  overflow: hidden;
   .name {
     line-height: 33px;
+    // width:40vw;
+    // display:inline-block;
   }
   .name_btn {
     width: 200px;
-
+    display: inline-block;
     img {
       height: 12px;
       padding-right: 10px;
@@ -629,15 +647,26 @@ export default {
     }
   }
   .intro_detail {
+    line-height: 16px;
     color: #7e7d7d;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     // -webkit-line-clamp: 3;
     overflow: hidden;
   }
+  .text{
+    position: absolute;
+    padding: 15px;
+    line-height: 16px;
+    z-index: 1;
+    opacity: 0;
+  }
+  .introduce{
+    position: relative;
+    z-index: 2;
+  }
   .down {
     transition: all 0.8s;
-
     width: 16px;
     &.show {
       transform: rotate(-180deg);
