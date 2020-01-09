@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" >
     <div class="coachInfo" v-show="coachInfo.name">
       <mt-swipe :auto="3000" class="swiper ta_c">
         <mt-swipe-item class="swiper" v-for="(item,index ) of coachInfo.Appearances" :key="index">
@@ -49,10 +49,10 @@
         </div>
       </div>
       <div class="page_bottom ta_c">
-        <div class="fs_12 tit1">
+        <div class="fs_12 tit1" @click="goApp">
           <img class="vt_m pr_15" src="@/assets/LOGO1@2x.png" />老虎教练
         </div>
-        <div class="mt_10 tit2">使用中国最大的健身教练app老虎教练生成</div>
+        <div class="mt_10 tit2" @click="goApp">使用中国最大的健身教练app老虎教练生成</div>
       </div>
     </div>
     <div class="expire ta_c" v-show="isExpire">
@@ -168,6 +168,9 @@ export default {
     }
   },
   methods: {
+    goApp(){
+      window.location.href="https://a.app.qq.com/o/simple.jsp?pkgname=hk.socap.tigercoach";
+    },
     checkLogin(){
       if(this.code){
         this.showSign=true;
@@ -418,6 +421,7 @@ export default {
         }
       );
     },
+    
     getData() {
       if (this.loading) {
         return;
