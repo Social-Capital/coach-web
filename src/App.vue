@@ -1,63 +1,85 @@
 <template>
-  <div id="app" >
+  <div id="app">
     <div class="coachInfo" v-show="coachInfo.name">
-      <mt-swipe :auto="3000" class="swiper ta_c">
-        <mt-swipe-item class="swiper" v-for="(item,index ) of coachInfo.Appearances" :key="index">
-          <div class="img_con swiper_con">
-            <img :src="item.appearance" class="bg" alt />
-            <img :src="item.appearance" class="main" alt />
+      <div class="coach_info_new fs_14">
+        <div class="left_20">
+          <div class="name fs_24">{{coachInfo.name}}</div>
+          <div class="mt_10">
+            <p>{{coachInfo.city}}</p>
+            <p v-html="coachInfo.introduce||'暂无简介'"></p>
           </div>
-        </mt-swipe-item>
-      </mt-swipe>
-      <div class="info_con pd_15">
-        <div class="name_con ta_l">
-          <span class="name float_l fw_b fs_16">{{coachInfo.name}}</span>
-          <mt-button size="small" class="fl_r name_btn" type="primary" @click="checkLogin">
-            <img src="@/assets/icon4@2x.png" />免费咨询
-          </mt-button>
-        </div>
-        <div class="intro pd_15 mt_15">
-          <div class="location " :class="{pb_15:coachInfo.introduce}">
-            <img class="pr_15 vt_m" src="@/assets/location@2x.png" />
-            {{coachInfo.city}}
-          </div>
-          <div
-            v-if="coachInfo.introduce"
-            class="intro_detail"
-            :style="{'-webkit-line-clamp': isShowIntro?'unset':2,}"
-            v-html="coachInfo.introduce||'暂无简介'"
-          ></div>
-          <div class="text" id="text">
-            {{coachInfo.introduce}}
-          </div>
-          <div class="ta_c mt_10 introduce" v-if="coachInfo.introduce&&longEnough" @click="isShowIntro=!isShowIntro">
-            <img class="down" :class="{show:isShowIntro}" src="@/assets/down.png" alt />
-          </div>
-        </div>
-        <div class="certs mt_15" v-if="coachInfo.Certs&&coachInfo.Certs.length>0">
-          <div class="cert_title">
-            <span class="cert_title_sub fs_16 fw_b">证书</span>
-            <div class="cert_title_main ta_c fs12 vt_m" >
-              <img class="vt_m pr_10" src="@/assets/icon2@2x.png" v-show="coachInfo.plus==1" /><span v-show="coachInfo.plus==1" >职业资格证书已经过老虎运动的真实性核查</span> 
+          <div class="certs mt_15" v-if="coachInfo.Certs&&coachInfo.Certs.length>0">
+            <div class="cert_title">
+              <span class="cert_title_sub fs_14 fw_b">职业资格</span>
+              <span class="fl_r fs_12 pr_20 ff_sf"  v-show="coachInfo.plus==1">􀇻验证通过</span>
             </div>
+            <div
+              class="cert_detail mt_5 fs_14"
+              v-for="(item,index ) in coachInfo.Certs"
+              :key="index"
+            >{{item.certname}}</div>
           </div>
+        </div>
+        <div class="swiper_con_new mt_10" >
           <div
-            class="cert_detail mt_15 fs_12"
-            v-for="(item,index ) in coachInfo.Certs"
+            class="img_con swiper_con"
+            v-for="(item,index ) of coachInfo.Appearances"
             :key="index"
           >
-            <img class="before" src="@/assets/icon1@2x.png" alt />
-            {{item.certname}}
-            <img class="after" src="@/assets/icon2@2x.png" alt />
+            <img
+              @click="showPic(item.appearance)"
+              :src="item.appearance+'?imageMogr2/thumbnail/!300x300r'"
+              alt
+            />
+          </div>
+        </div>
+        <div class="count left_20 mt_10">
+          <div class="class_count">
+            <p class="fs_24 fw_b">214</p>
+            <p>已完成课时</p>
+          </div>
+          <div class="ml_30 class_count">
+            <p class="fs_24 fw_b">¥350</p>
+            <p>已完成课时</p>
+          </div>
+        </div>
+        <div class="gap"></div>
+        <div class="book_btn" @click="goSign">免费预约一对一咨询</div>
+        <div class="book_modal" @click="showBookModal=false" v-if="showBookModal">
+          <div class="book_box" @click.stop>
+            <div class="active-box"></div>
+            <div class="step1" v-if="step1">
+              <h1 class="fs_24">一对一咨询</h1>
+              <p>请留下你的电话号码，教练会在24小时内解答你的运动问题。</p>
+              <p>号码仅供本次咨询使用，不会被透露给教练以外的任何第三方。</p>
+              <!-- <input type="tel"> -->
+              <mt-field class="phone_input ff_sf" type="tel" ref="phone_input" v-model="phone"></mt-field>
+
+              <div class="step1_btn" @click="getCode">{{count==60?"下一步":count+"s"}}</div>
+            </div>
+            <div class="step1 step2" v-if="step2">
+              <h1 class="fs_18">已经发送短信给{{checkedPhone}}</h1>
+              <p>请输入短信中的验证码</p>
+              <!-- <input type="tel"> -->
+              <mt-field class="phone_input ff_sf" type="tel" ref="phone_input" v-model="vcode"></mt-field>
+              <div @click="backToStep1" class="mt_10">没有收到/号码有误?</div>
+            </div>
+            <div class="step1 step3" v-if="step3">
+              <h1 class="fs_18">预约成功</h1>
+              <p>教练会在24小时内与你联系，请保持电话畅通。</p>
+              <div class="avatar_con">
+                <img class="avatar" :src="coachInfo.avatar" /> x
+                <img class="logo" src="@/assets/logo2.png" alt />
+              </div>
+              <div class="bottom_con">
+                <p>如有问题，请关注老虎运动公众号获取帮助。</p>
+                <img class="wechat mt_10" src="@/assets/wechat.jpeg" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="page_bottom ta_c">
-        <div class="fs_12 tit1" @click="goApp">
-          <img class="vt_m pr_15" src="@/assets/LOGO1@2x.png" />老虎教练
-        </div>
-        <div class="mt_10 tit2" @click="goApp">使用中国最大的健身教练app老虎教练生成</div>
-      </div>
+      
     </div>
     <div class="expire ta_c" v-show="isExpire">
       <img class="mt_100" src="@/assets/success/expire.png" alt />
@@ -67,53 +89,16 @@
         <p class="mt_15">关注⽼⻁运动公众号，更新教练信息</p>
       </div>
     </div>
-
-    <!-- <sign msg="Welcome to Your Vue.js App"/> -->
-
-    <div class="sign_con" v-show="showSign">
-      <div class="close" @click="showSign=false;showSuccess=false">
-        <img src="@/assets/sign/icon3@2x.png" alt />
-      </div>
-      <div class="sign" v-if="!showSuccess">
-        <div class="form ta_c pd_15">
-          <div class="tit1 fs_16">
-            <img class="vt_m pr_15" src="@/assets/sign/LOGO1@2x.png" />老虎教练
-          </div>
-          <div class="input_con">
-            <img src="@/assets/sign/icon1@2x.png" alt />
-
-            <input type="number" placeholder="请输入手机号" v-model.trim="phone" />
-          </div>
-          <div class="input_con">
-            <img src="@/assets/sign/icon2@2x.png" alt />
-            <input type="number" placeholder="请输入验证码" v-model.trim="vcode" />
-            <mt-button
-              size="normal"
-              @click="getCode"
-              :class="{counting:count<60}"
-              class="acode fl_r name_btn"
-              type="primary"
-            >{{count==60?"验证码":count+"s"}}</mt-button>
-          </div>
-          <mt-button size="large" class="mt_40" @click="checkCode" type="primary">提交</mt-button>
-        </div>
-        <div class="sign_info pd_15">
-          <span>
-            <img src="@/assets/sign/lock@2x.png" alt />
-          </span>
-          服务由健身教练和其他服务商提供。提交您的个人资料，即 代表您同意授权⽼⻁运动使⽤您提交的个⼈资料和联系信息 并将为您提供服务所必须的联系资料分享给第三⽅。⽼⻁运 动和第三⽅会对的个⼈资料进⾏严格的保护。
-        </div>
-      </div>
-      <div class="success ta_c pd_15" v-show="showSuccess">
-        <img class="mt_30" src="@/assets/success/icon1@2x.png" alt />
-        <p class="mt_10">提交成功</p>
-        <p class="mt_40 lh_12">⽼⻁教练 已通知</p>
-        <p class="lh_12">{{coachInfo.name}}</p>
-        <p class="lh_12">在24⼩时内通过预留的⼿机号码与您联系</p>
-        <img class="code mt_15" src="@/assets/wechat.jpeg" alt />
-        <p class="mt_15 fs_10">如需更多服务，请关注⽼⻁运动公众号</p>
-      </div>
-    </div>
+  
+    <div class="top-title" @click="goApp">老虎教练app 正在助力22万位优质健身教练</div>
+    <!-- <mt-popup
+      v-model="popupVisible"
+      :closeOnClickModal="true"
+      popup-transition="popup-fade"
+      :modal="true"
+    >
+      <img :src="popUpImg" class="popUpImg" alt />
+    </mt-popup> -->
   </div>
 </template>
 
@@ -128,41 +113,46 @@ export default {
   },
   data() {
     return {
+      phoneNumber: "",
+      step1: false,
+      step2: false,
+      step3: false,
+      showBookModal: false,
+      popUpImg: "",
+      popupVisible: false,
+
+      // new
       cid: "",
       code: "",
-      longEnough:false, 
+      longEnough: false,
       isShowIntro: false,
       coachInfo: {
         // name:"洒的飞洒是但是但是是的但是但是是的是的但是   ",
         // introduce:"士大夫是的第达是的发的夫的飞洒是的伤大发而化工二狗儿沙发s二等分士大夫士大夫萨芬的士大夫 士大夫士大夫",
-        Appearances: []
+        Appearances: [],
       },
-      config:{
-        appId:""
+      config: {
+        appId: "",
       },
       isExpire: false,
       isSigned: false,
       loading: false,
-      showSign: false,
-      showSuccess: false,
       phone: "",
       vcode: "",
       base64code: "",
-
       count: 60,
       msg_id: "",
-      checkedPhone: ""
+      checkedPhone: "",
     };
   },
-  mounted(){
-    this.$nextTick(()=>{
-      console.log(document.getElementById("text").offsetHeight);
-      let height=document.getElementById("text").offsetHeight;
-      if((height-30)>32){
-        this.longEnough=true;
-      }
-    })
-    
+  mounted() {
+    // this.$nextTick(() => {
+    //   console.log(document.getElementById("text").offsetHeight);
+    //   let height = document.getElementById("text").offsetHeight;
+    //   if (height - 30 > 32) {
+    //     this.longEnough = true;
+    //   }
+    // });
   },
   created() {
     var cid = utils.getQueryString("state");
@@ -183,45 +173,91 @@ export default {
       this.getData();
     }
   },
-  methods: {
-    goApp(){
-      window.location.href="https://a.app.qq.com/o/simple.jsp?pkgname=hk.socap.tigercoach";
+  watch: {
+    vcode(val) {
+      if (val && val.length == 6) {
+        console.log("dsdsdsdsd");
+        // this.checkCode();
+      }
     },
-    checkLogin(){
-      if(this.code){
-        this.showSign=true;
-      }else{
-        let rdr= encodeURIComponent("https://promo.tigercoach.cn/coach/index.html") ;
-        
-        let url="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+this.config.appId+"&redirect_uri="+rdr+"&response_type=code&scope=snsapi_base&state="+this.cid+"&connect_redirect=1#wechat_redirect"
-        window.location.href=url;
+  },
+  methods: {
+    backToStep1() {
+      this.step1 = true;
+      this.step2 = false;
+      this.step3 = false;
+    },
+    goSign() {
+      this.showBookModal = true;
+      this.step1 = true;
+      this.step2 = false;
+      this.step3 = false;
+      // this.$refs.phone_input.focus();
+      this.$nextTick(() => {
+        // this.$refs.phone_input.focus();
+        document.getElementsByClassName("mint-field-core")[0].focus();
+      });
+    },
+    // new
+    showPic(img) {
+      let list = this.coachInfo.Appearances.map((item) => {
+        return item.appearance;
+      });
+      console.log(list);
+      wx.previewImage({
+        current: img,
+        urls: list,
+      });
+    },
+    goApp() {
+      window.location.href =
+        "https://tigercoach.cn/";
+    },
+    checkLogin() {
+      if (this.code) {
+        this.showSign = true;
+      } else {
+        let rdr = encodeURIComponent(
+          "https://promo.tigercoach.cn/coach/index.html"
+        );
+
+        let url =
+          "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
+          this.config.appId +
+          "&redirect_uri=" +
+          rdr +
+          "&response_type=code&scope=snsapi_base&state=" +
+          this.cid +
+          "&connect_redirect=1#wechat_redirect";
+        window.location.href = url;
       }
     },
     initConfig() {
-      var _this = this;
+      // var _this = this;
       this.$api.post(
         "https://api.tigercoach.cn/v3.5/port/wx/js/signature",
         {
           // url: window.location.href
-          url: "https://promo.tigercoach.cn/coach/index.html?state=1NEbUPXJQFONmj7L3rOQSOvNuTr"
+          url:
+            "https://promo.tigercoach.cn/coach/index.html?state=1NEbUPXJQFONmj7L3rOQSOvNuTr",
         },
-        response => {
+        (response) => {
           if (response.status >= 200 && response.status < 300) {
             let res = response.data;
             if (res.Code == 200 && res.Data) {
-              this.config=res.Data;
-              _this.initWx(res.Data);
-            } 
-          } 
+              this.config = res.Data;
+              this.initWx(res.Data);
+            }
+          }
         },
         {
-          token:"admin_123"
+          token: "admin_123",
         }
       );
     },
     initWx(data) {
       console.log(data);
-      var _this=this;
+      var _this = this;
       wx.config({
         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
         appId: data.appId, // 必填，公众号的唯一标识
@@ -233,71 +269,74 @@ export default {
           "onMenuShareAppMessage",
           "onMenuShareQQ",
           "onMenuShareWeibo",
-          "onMenuShareQZone"
-        ] // 必填，需要使用的JS接口列表 这里填写需要用到的微信api openlocation为使用微信内置地图查看位置接口
+          "onMenuShareQZone",
+          "previewImage",
+        ], // 必填，需要使用的JS接口列表 这里填写需要用到的微信api openlocation为使用微信内置地图查看位置接口
       });
-      wx.ready(function() {
+      wx.ready(function () {
         wx.onMenuShareTimeline({
-          title: _this.coachInfo.name+" 在老虎教练等你", // 分享标题
+          title: _this.coachInfo.name + " 在老虎教练等你", // 分享标题
           desc: "", // 分享描述
-          link: "https://promo.tigercoach.cn/coach/index.html?state="+_this.cid, // 分享链接
-          imgUrl: _this.coachInfo.Appearances[0].appearance||logo, // 分享图标
-          success: function() {
+          link:
+            "https://promo.tigercoach.cn/coach/index.html?state=" + _this.cid, // 分享链接
+          imgUrl: _this.coachInfo.Appearances[0].appearance || logo, // 分享图标
+          success: function () {
             // 用户确认分享后执行的回调函数
           },
-          cancel: function() {
+          cancel: function () {
             // 用户取消分享后执行的回调函数
-          }
+          },
         });
         wx.onMenuShareAppMessage({
-          title: _this.coachInfo.name+" 在老虎教练等你", // 分享标题
+          title: _this.coachInfo.name + " 在老虎教练等你", // 分享标题
           desc: "", // 分享描述
-          link: "https://promo.tigercoach.cn/coach/index.html?state="+_this.cid, // 分享链接
-          imgUrl: _this.coachInfo.Appearances[0].appearance||logo, // 分享图标
+          link:
+            "https://promo.tigercoach.cn/coach/index.html?state=" + _this.cid, // 分享链接
+          imgUrl: _this.coachInfo.Appearances[0].appearance || logo, // 分享图标
           type: "", // 分享类型,music、video或link，不填默认为link
           dataUrl: "", // 如果type是music或video，则要提供数据链接，默认为空
-          success: function() {
+          success: function () {
             // 用户确认分享后执行的回调函数
           },
-          cancel: function() {
+          cancel: function () {
             // 用户取消分享后执行的回调函数
-          }
+          },
         });
         wx.onMenuShareQQ({
           title: "", // 分享标题
           desc: "", // 分享描述
           link: "", // 分享链接
           imgUrl: "", // 分享图标
-          success: function() {
+          success: function () {
             // 用户确认分享后执行的回调函数
           },
-          cancel: function() {
+          cancel: function () {
             // 用户取消分享后执行的回调函数
-          }
+          },
         });
         wx.onMenuShareQZone({
           title: "", // 分享标题
           desc: "", // 分享描述
           link: "", // 分享链接
           imgUrl: "", // 分享图标
-          success: function() {
+          success: function () {
             // 用户确认分享后执行的回调函数
           },
-          cancel: function() {
+          cancel: function () {
             // 用户取消分享后执行的回调函数
-          }
+          },
         });
       });
     },
     booking() {
-      var _this = this;
+      // var _this = this;
       if (this.loading) {
         return;
       }
 
       this.$indicator.open({
         text: "发送中...",
-        spinnerType: "fading-circle"
+        spinnerType: "fading-circle",
       });
       this.loading = true;
       this.$api.post(
@@ -305,26 +344,28 @@ export default {
         {
           coach_id: this.cid,
           customer_tel: this.phone,
-          customer_code: this.code
+          customer_code: this.code,
         },
-        response => {
+        (response) => {
           this.loading = false;
           this.$indicator.close();
           if (response.status >= 200 && response.status < 300) {
             console.log(response.data);
             let res = response.data;
             // this.showSuccess=true;
-            if (res.Code == 200 ) {
+            if (res.Code == 200) {
               // console.log(res.Data);
               // this.coachInfo = res.Data;
               // res.code;
               // this.$toast();
-              this.showSuccess = true;
-            } else if(res.Code == 500 ){
+              this.step1 = false;
+              this.step2 = false;
+              this.step3 = true;
+            } else if (res.Code == 500) {
               this.$toast("登陆已过期请重试!");
-              this.code="";
-              this.showSign=false; 
-            }else {
+              this.code = "";
+              this.showSign = false;
+            } else {
               // this.isExpire = true;
               this.$toast(res.Msg);
             }
@@ -338,7 +379,7 @@ export default {
       );
     },
     checkCode() {
-      var _this = this;
+      // var _this = this;
       if (this.loading) {
         return;
       }
@@ -349,16 +390,16 @@ export default {
       this.loading = true;
       this.$indicator.open({
         text: "验证中...",
-        spinnerType: "fading-circle"
+        spinnerType: "fading-circle",
       });
 
       this.$api.post(
         "https://api.tigercoach.cn/open/tel/verify",
         {
           msg_id: this.msg_id,
-          code: this.vcode
+          code: this.vcode,
         },
-        response => {
+        (response) => {
           this.loading = false;
           this.$indicator.close();
           if (response.status >= 200 && response.status < 300) {
@@ -388,34 +429,41 @@ export default {
       );
     },
     getCode() {
-      var _this = this;
+      // var _this = this;
       if (this.loading || this.count < 60) {
         return;
       }
-      console.log("嘚瑟是的是的士大夫第三方");
+      if (!this.phone || !/^1(2|3|4|5|6|7|8|9)\d{9}$/.test(this.phone)) {
+        this.$toast("请输入正确手机号");
+        return;
+      }
       this.$indicator.open({
         text: "发送中...",
-        spinnerType: "fading-circle"
+        spinnerType: "fading-circle",
       });
       this.loading = true;
       this.$api.post(
         "https://api.tigercoach.cn/open/tel/send",
         {
-          tel: this.phone
+          tel: this.phone,
         },
-        response => {
+        (response) => {
           this.loading = false;
           this.$indicator.close();
           if (response.status >= 200 && response.status < 300) {
             console.log(response.data);
             let res = response.data;
             if (res.Code == 200 && res.Data) {
-              // console.log(res.Data);
-              // this.coachInfo = res.Data;
-              // res.code
               this.$toast("发送成功");
               this.msg_id = res.Data.msg_id;
               this.checkedPhone = this.phone;
+              this.step1 = false;
+              this.step2 = true;
+              this.step3 = false;
+              this.$nextTick(() => {
+                // this.$refs.phone_input.focus();
+               document.getElementsByClassName("step2")[0].getElementsByClassName("mint-field-core")[0].focus();
+              });
               let interval = setInterval(() => {
                 this.count--;
                 if (this.count <= 0) {
@@ -436,22 +484,22 @@ export default {
         }
       );
     },
-    
+
     getData() {
       if (this.loading) {
         return;
       }
       this.$indicator.open({
         text: "加载中...",
-        spinnerType: "fading-circle"
+        spinnerType: "fading-circle",
       });
       this.loading = true;
       this.$api.get(
         "https://api.tigercoach.cn/open/coach/info",
         {
-          coachId: this.cid
+          coachId: this.cid,
         },
-        response => {
+        (response) => {
           this.loading = false;
           this.$indicator.close();
           if (response.status >= 200 && response.status < 300) {
@@ -462,10 +510,12 @@ export default {
               // res.Data.Appearances=[];
               // res.Data.plus=0;
               // res.Data.Certs="";
-              if(!res.Data.Appearances||res.Data.Appearances.length==0){
-                res.Data.Appearances=[{
-                  appearance:"https://promo.tigercoach.cn/img/no_photo.png"
-                }]
+              if (!res.Data.Appearances || res.Data.Appearances.length == 0) {
+                res.Data.Appearances = [
+                  {
+                    appearance: "https://promo.tigercoach.cn/img/no_photo.png",
+                  },
+                ];
               }
               // res.Data.introduce="sadf asdf s沙发士大夫撒旦法爱的色放送达UK和福克斯大富豪 第三方哈萨克京东方啥的看法双卡双待后方可健身房康师傅会计师打发会计师打发和卡萨丁发看见谁看见谁可是会计师费会计师费看见谁看见 ";
               this.coachInfo = res.Data;
@@ -481,19 +531,43 @@ export default {
           }
         }
       );
-    }
-  }
+    },
+  },
 };
 </script>
-
+<style lang="less">
+.phone_input {
+  border-bottom: 1px solid #fff;
+  &.mint-cell {
+    background: none;
+  }
+  &:last-child {
+    background: none;
+  }
+  .mint-cell-wrapper {
+    background: none;
+    .mint-field-core {
+      background: #000;
+      color: #fff;
+      font-size: 24px;
+    }
+  }
+}
+</style>
 <style lang="less" scoped>
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  color: #ddd;
+  color: #000;
 }
+.popUpImg {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+}
+
 .expire {
   height: 100vh;
   width: 100vw;
@@ -516,163 +590,6 @@ export default {
     bottom: 60px;
   }
 }
-.sign_con {
-  position: fixed;
-  top: 50px;
-  width: 80vw;
-  left: 10vw;
-  background: rgba(58, 58, 58, 1);
-  border-radius: 5px;
-  min-height: 50vw;
-  input {
-    color: #ddd;
-  }
-  .sign {
-    .form {
-      .tit1 {
-        margin-top: 30px;
-        line-height: 25px;
-        margin-bottom: 40px;
-        img {
-          height: 20px;
-          width: 20px;
-          margin-top: -2px;
-        }
-      }
-      .input_con {
-        margin-top: 10px;
-        position: relative;
-        line-height: 40px;
-        .acode {
-          position: absolute;
-          right: 10px;
-          top: 7px;
-          height: 26px;
-          background: rgba(255, 34, 71, 0) !important;
-          border: 1px solid rgba(255, 34, 71, 0.58);
-          border-radius: 16px;
-          color: rgba(255, 34, 71, 0.58);
-          padding-left: 20px;
-          padding-right: 20px;
-          &.counting {
-            color: #ddd;
-            border-color: #ddd;
-          }
-        }
-        img {
-          height: 18px;
-          position: absolute;
-          top: 11px;
-          left: 10px;
-          display: inline-block;
-          padding-right: 10px;
-          border-right: 1px solid #ddd;
-        }
-        input {
-          width: 100%;
-          line-height: 40px;
-          background: #303030;
-          padding: 0 40px;
-          box-sizing: border-box;
-          border-radius: 5px;
-          border: none;
-        }
-      }
-    }
-    .sign_info {
-      position: relative;
-      padding: 15px 15px;
-      margin-top: 40px;
-      border-top: 1px dashed #ddd;
-      span {
-        width: 60px;
-        display: line-block;
-        position: absolute;
-        top: -8px;
-        left: 50%;
-        color: #585858;
-        transform: translateX(-50%);
-        background: rgba(58, 58, 58, 1);
-        text-align: center;
-        img {
-          height: 12px;
-        }
-      }
-    }
-  }
-  .success {
-    .lh_12 {
-      line-height: 1.2;
-    }
-    .code {
-      width: 130px;
-    }
-    img {
-      width: 73px;
-    }
-  }
-  .close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    img {
-      height: 20px;
-      width: 20px;
-    }
-  }
-}
-.name_con {
-  overflow: hidden;
-  .name {
-    line-height: 33px;
-    // width:40vw;
-    // display:inline-block;
-  }
-  .name_btn {
-    width: 200px;
-    display: inline-block;
-    img {
-      height: 12px;
-      padding-right: 10px;
-      vertical-align: middle;
-    }
-  }
-}
-.intro {
-  background: rgba(58, 58, 58, 1);
-  border-radius: 5px;
-  .location {
-    img {
-      height: 12px;
-    }
-  }
-  .intro_detail {
-    line-height: 16px;
-    color: #7e7d7d;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    // -webkit-line-clamp: 3;
-    overflow: hidden;
-  }
-  .text{
-    position: absolute;
-    padding: 15px;
-    line-height: 16px;
-    z-index: 1;
-    opacity: 0;
-  }
-  .introduce{
-    position: relative;
-    z-index: 2;
-  }
-  .down {
-    transition: all 0.8s;
-    width: 16px;
-    &.show {
-      transform: rotate(-180deg);
-    }
-  }
-}
 
 .certs {
   .cert_title {
@@ -691,11 +608,8 @@ export default {
     }
   }
   .cert_detail {
-    background: rgba(58, 58, 58, 1);
     border-radius: 5px;
     position: relative;
-    line-height: 34px;
-    padding: 0 40px 0 40px;
     img {
       height: 12px;
       position: absolute;
@@ -738,5 +652,170 @@ export default {
   left: 10vw;
   background: rgba(58, 58, 58, 1);
   border-radius: 5px;
+}
+
+// new
+
+.top-title {
+  box-sizing: border-box;
+  width: 100%;
+  height: 24px;
+  line-height: 24px;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding-left: 15vw;
+  background: linear-gradient(to right, rgb(66, 150, 254), rgb(138, 93, 254));
+}
+.coach_info_new {
+  padding-top: 40px;
+  padding-bottom:100px;
+  .left_20 {
+    padding-left: 15vw;
+  }
+  .name {
+    border-bottom: 3px solid #000;
+    padding-bottom: 10px;
+  }
+  .certs {
+    .cert_title {
+      line-height: 20px;
+      position: relative;
+      height: 20px;
+      .cert_title_sub {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      .cert_title_main {
+        img {
+          height: 12px;
+        }
+      }
+    }
+    .cert_detail {
+      border-radius: 5px;
+      position: relative;
+    }
+  }
+  .class_count {
+    display: inline-block;
+  }
+
+  .swiper_con_new {
+    width: 100vw;
+    box-sizing: border-box;
+    overflow-x: scroll;
+    white-space: nowrap;
+    .img_con {
+      width: 300px;
+      height: 300px;
+      background: #fff;
+      display: inline-block;
+      margin-left: 10px;
+      &:first-child {
+        margin-left: 15vw;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+  .book_btn {
+    width: 280px;
+    height: 40px;
+    background: #000;
+    // margin:30px auto;
+    position: fixed;
+    left: 50%;
+    bottom: 30px;
+    margin-left: -140px;
+    // font-size:14px;
+    line-height: 40px;
+    text-align: center;
+    color: #fff;
+  }
+  .book_modal {
+    position: fixed;
+    color: white;
+    height: 100vh;
+    width: 100vw;
+    bottom: 0;
+    left: 0;
+    .book_box {
+      height: 50vh;
+      width: 100vw;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      overflow: hidden;
+      .active-box {
+        background: #000;
+        position: absolute;
+        left: 50%;
+        bottom: 50px;
+        height: 150vh;
+        width: 150vh;
+        // margin-left: -50%
+        transform: translate(-50%, 50%);
+        border-radius: 50%;
+        animation: spread 0.5s ease-out;
+      }
+      .step1 {
+        padding: 30px 20px 0 15vw;
+        position: absolute;
+        top: 0;
+        left: 0;
+        .step1_btn {
+          width: 100%;
+          height: 40px;
+          margin-top: 17px;
+          line-height: 40px;
+          text-align: center;
+          background: #fff;
+          color: #000;
+        }
+      }
+      .step3 {
+        position: relative;
+        height: 100%;
+        .avatar_con {
+          margin-top: 20px;
+          .avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 1px solid #fff;
+            vertical-align: middle;
+          }
+          .logo {
+            height: 56px;
+            vertical-align: middle;
+          }
+        }
+        .bottom_con {
+          position: absolute;
+          bottom: 40px;
+          left: 15vw;
+        }
+        .wechat {
+          height: 23vw;
+        }
+      }
+    }
+  }
+}
+@keyframes spread {
+  from {
+    width: 10px;
+    height: 10px;
+  }
+  to {
+    width: 110vh;
+    height: 110vh;
+  }
 }
 </style>

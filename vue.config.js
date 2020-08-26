@@ -2,10 +2,11 @@ module.exports = {
     outputDir: 'dist',   //build输出目录
     assetsDir: 'assets', //静态资源目录（js, css, img）
     lintOnSave: false, //是否开启eslint
-    publicPath: '././', 
+    // publicPath: '././', 
+    publicPath: './', 
     devServer: {
         open: true, //是否自动弹出浏览器页面
-        host: "localhost",
+        host: "192.168.31.149",
         port: '8080',
         https: true,   //是否使用https协议
         hotOnly: true, //是否开启热更新
