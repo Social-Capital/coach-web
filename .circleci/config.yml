@@ -44,7 +44,7 @@ jobs:
           command: tccli configure set secretId $TC_SECRET_ID region $TC_REGION secretKey $TC_SECRET_KEY
       - run:
           name: Refresh CDN
-          command: 'tccli cdn PurgePathCache --FlushType delete --Paths '{"0": "https://promo.tigercoach.cn/coach/"}''
+          command: 'tccli cdn PurgePathCache --FlushType delete --Paths \'\{\"0\"\: \"https\://promo.tigercoach.cn/coach/\"\}\''
 workflows:
   version: 2
   build-and-deploy:
