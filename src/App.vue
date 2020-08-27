@@ -3,15 +3,15 @@
     <div class="coachInfo" v-show="coachInfo.name">
       <div class="coach_info_new fs_14">
         <div class="left_20">
-          <div class="name fs_24">{{coachInfo.name}}</div>
+          <div class="name fs_24 fw_b">{{coachInfo.name}}</div>
           <div class="mt_10">
             <p>{{coachInfo.city}}</p>
-            <p v-html="coachInfo.introduce||'暂无简介'"></p>
+            <p v-html="coachInfo.introduce"></p>
           </div>
           <div class="certs mt_15" v-if="coachInfo.Certs&&coachInfo.Certs.length>0">
             <div class="cert_title">
               <span class="cert_title_sub fs_14 fw_b">职业资格</span>
-              <span class="fl_r fs_12 pr_20 ff_sf"  v-show="coachInfo.plus==1">􀇻验证通过</span>
+              <span class="fl_r fs_12 pr_20 ff_sf" v-show="coachInfo.plus==1">􀇻验证通过</span>
             </div>
             <div
               class="cert_detail mt_5 fs_14"
@@ -20,7 +20,7 @@
             >{{item.certname}}</div>
           </div>
         </div>
-        <div class="swiper_con_new mt_10" >
+        <div class="swiper_con_new mt_10">
           <div
             class="img_con swiper_con"
             v-for="(item,index ) of coachInfo.Appearances"
@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="count left_20 mt_10">
-          <div class="class_count" >
+          <div class="class_count">
             <p class="fs_24 fw_b">{{coachInfo.totalhours}}</p>
             <p>已完成课时</p>
           </div>
@@ -79,7 +79,6 @@
           </div>
         </div>
       </div>
-      
     </div>
     <div class="expire ta_c" v-show="isExpire">
       <img class="mt_100" src="@/assets/success/expire.png" alt />
@@ -89,7 +88,7 @@
         <p class="mt_15">关注⽼⻁运动公众号，更新教练信息</p>
       </div>
     </div>
-  
+
     <div class="top-title" @click="goApp">老虎教练app 正在助力22万位优质健身教练</div>
     <!-- <mt-popup
       v-model="popupVisible"
@@ -98,7 +97,7 @@
       :modal="true"
     >
       <img :src="popUpImg" class="popUpImg" alt />
-    </mt-popup> -->
+    </mt-popup>-->
   </div>
 </template>
 
@@ -176,8 +175,8 @@ export default {
   watch: {
     vcode(val) {
       if (val && val.length == 6) {
-        console.log("dsdsdsdsd");
-        // this.checkCode();
+        // console.log("dsdsdsdsd");
+        this.checkCode();
       }
     },
   },
@@ -210,8 +209,7 @@ export default {
       });
     },
     goApp() {
-      window.location.href =
-        "https://tigercoach.cn/";
+      window.location.href = "https://tigercoach.cn/";
     },
     checkLogin() {
       if (this.code) {
@@ -408,8 +406,6 @@ export default {
             if (res.Code == 200 && res.Data) {
               // console.log(res.Data);
               // this.coachInfo = res.Data;
-              // res.code
-
               if (res.Data.is_valid) {
                 this.booking();
               } else {
@@ -462,7 +458,10 @@ export default {
               this.step3 = false;
               this.$nextTick(() => {
                 // this.$refs.phone_input.focus();
-               document.getElementsByClassName("step2")[0].getElementsByClassName("mint-field-core")[0].focus();
+                document
+                  .getElementsByClassName("step2")[0]
+                  .getElementsByClassName("mint-field-core")[0]
+                  .focus();
               });
               let interval = setInterval(() => {
                 this.count--;
@@ -510,13 +509,6 @@ export default {
               // res.Data.Appearances=[];
               // res.Data.plus=0;
               // res.Data.Certs="";
-              if (!res.Data.Appearances || res.Data.Appearances.length == 0) {
-                res.Data.Appearances = [
-                  {
-                    appearance: "https://promo.tigercoach.cn/img/no_photo.png",
-                  },
-                ];
-              }
               // res.Data.introduce="sadf asdf s沙发士大夫撒旦法爱的色放送达UK和福克斯大富豪 第三方哈萨克京东方啥的看法双卡双待后方可健身房康师傅会计师打发会计师打发和卡萨丁发看见谁看见谁可是会计师费会计师费看见谁看见 ";
               this.coachInfo = res.Data;
             } else {
@@ -670,7 +662,7 @@ export default {
 }
 .coach_info_new {
   padding-top: 40px;
-  padding-bottom:100px;
+  padding-bottom: 100px;
   .left_20 {
     padding-left: 15vw;
   }
