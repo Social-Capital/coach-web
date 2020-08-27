@@ -11,7 +11,7 @@
           <div class="certs mt_15" v-if="coachInfo.Certs&&coachInfo.Certs.length>0">
             <div class="cert_title">
               <span class="cert_title_sub fs_14 fw_b">职业资格</span>
-              <span class="fl_r fs_12 pr_20 ff_sf" v-show="coachInfo.plus==1">􀇻验证通过</span>
+              <span class="fl_r fs_12 pr_20 " v-show="coachInfo.plus==1">􀇻验证通过</span>
             </div>
             <div
               class="cert_detail mt_5 fs_14"
@@ -53,7 +53,7 @@
               <p>请留下你的电话号码，教练会在24小时内解答你的运动问题。</p>
               <p>号码仅供本次咨询使用，不会被透露给教练以外的任何第三方。</p>
               <!-- <input type="tel"> -->
-              <mt-field class="phone_input ff_sf" type="tel" ref="phone_input" v-model="phone"></mt-field>
+              <mt-field class="phone_input " type="tel" ref="phone_input" v-model="phone"></mt-field>
 
               <div class="step1_btn" @click="getCode">{{count==60?"下一步":count+"s"}}</div>
             </div>
@@ -61,7 +61,7 @@
               <h1 class="fs_18">已经发送短信给{{checkedPhone}}</h1>
               <p>请输入短信中的验证码</p>
               <!-- <input type="tel"> -->
-              <mt-field class="phone_input ff_sf" type="tel" ref="phone_input" v-model="vcode"></mt-field>
+              <mt-field class="phone_input " type="tel" ref="phone_input" v-model="vcode"></mt-field>
               <div @click="backToStep1" class="mt_10">没有收到/号码有误?</div>
             </div>
             <div class="step1 step3" v-if="step3">
@@ -541,7 +541,7 @@ export default {
 </style>
 <style lang="less" scoped>
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  // font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
