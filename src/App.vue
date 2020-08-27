@@ -34,13 +34,13 @@
           </div>
         </div>
         <div class="count left_20 mt_10">
-          <div class="class_count">
-            <p class="fs_24 fw_b">214</p>
+          <div class="class_count" >
+            <p class="fs_24 fw_b">{{coachInfo.totalhours}}</p>
             <p>已完成课时</p>
           </div>
-          <div class="ml_30 class_count">
-            <p class="fs_24 fw_b">¥350</p>
-            <p>已完成课时</p>
+          <div class="ml_30 class_count" v-if="coachInfo.price">
+            <p class="fs_24 fw_b">¥{{coachInfo.price}}</p>
+            <p>课时单价</p>
           </div>
         </div>
         <div class="gap"></div>
