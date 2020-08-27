@@ -68,8 +68,8 @@
               <h1 class="fs_18">预约成功</h1>
               <p>教练会在24小时内与你联系，请保持电话畅通。</p>
               <div class="avatar_con">
-                <img class="avatar" :src="coachInfo.avatar" /> x
-                <img class="logo" src="@/assets/logo2.png" alt />
+                <img class="avatar mr_20" :src="coachInfo.avatar" /> x
+                <img class="logo ml_20" src="@/assets/logo2.png" alt />
               </div>
               <div class="bottom_con">
                 <p>如有问题，请关注老虎运动公众号获取帮助。</p>
@@ -145,13 +145,6 @@ export default {
     };
   },
   mounted() {
-    // this.$nextTick(() => {
-    //   console.log(document.getElementById("text").offsetHeight);
-    //   let height = document.getElementById("text").offsetHeight;
-    //   if (height - 30 > 32) {
-    //     this.longEnough = true;
-    //   }
-    // });
   },
   created() {
     var cid = utils.getQueryString("state");
@@ -188,9 +181,9 @@ export default {
     },
     goSign() {
       this.showBookModal = true;
-      this.step1 = true;
+      this.step1 = false;
       this.step2 = false;
-      this.step3 = false;
+      this.step3 = true;
       // this.$refs.phone_input.focus();
       this.$nextTick(() => {
         // this.$refs.phone_input.focus();
