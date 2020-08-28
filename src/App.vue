@@ -11,7 +11,8 @@
           <div class="certs mt_15" v-if="coachInfo.Certs&&coachInfo.Certs.length>0">
             <div class="cert_title">
               <span class="cert_title_sub fs_14 fw_b">职业资格</span>
-              <span class="fl_r fs_12 pr_20 " v-show="coachInfo.plus==1">􀇻验证通过</span>
+              <span class="fl_r fs_12 pr_20 " v-show="coachInfo.plus==1">
+                <img style="height:14px;vertical-align: text-top;" class="logo mr_5" src="@/assets/safety-certificate-f.png" alt />验证通过</span>
             </div>
             <div
               class="cert_detail mt_5 fs_14"
