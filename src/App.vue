@@ -182,9 +182,9 @@ export default {
     },
     goSign() {
       this.showBookModal = true;
-      this.step1 = false;
+      this.step1 = true;
       this.step2 = false;
-      this.step3 = true;
+      this.step3 = false;
       // this.$refs.phone_input.focus();
       this.$nextTick(() => {
         // this.$refs.phone_input.focus();
